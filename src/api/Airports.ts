@@ -29,7 +29,6 @@ export const getAirportsFromApi = async (location: City): Promise<Airport[]> => 
 
     return result;
   } catch (error) {
-    console.log('error ', error);
-    throw 'error';
+    throw new Error(error);
   }
 };

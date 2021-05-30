@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, MenuItem, InputLabel, Typography } from '@material-ui/core';
+import { TextField, MenuItem, InputLabel } from '@material-ui/core';
 
 import { currencies } from 'types';
 
@@ -12,7 +12,7 @@ interface SelectCurrencyProps {
 
 export const SelectCurrency = ({ value, onSelectCurrency }: SelectCurrencyProps) => {
   const classes = useStyles();
-  const [currency, setCurrency] = React.useState<string>(value ? value : currencies[0].value);
+  const [currency, setCurrency] = React.useState<string>(value ? value : '');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
@@ -31,9 +31,7 @@ export const SelectCurrency = ({ value, onSelectCurrency }: SelectCurrencyProps)
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <InputLabel required={true} className={classes.inputLabel}>
-        <Typography variant="h6" component={'span'} color="textPrimary">
-          Select Currency
-        </Typography>
+        Select Currency
       </InputLabel>
       <TextField id="outlined-select-currency" select value={currency} onChange={handleChange} variant="outlined">
         {renderCurrencies()}

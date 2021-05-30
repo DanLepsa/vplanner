@@ -12,3 +12,8 @@ export const currencies = [
     label: '€',
   },
 ];
+
+export enum CurrencySeparator {
+  DOT = '.',
+  COMMA = ',',
+}

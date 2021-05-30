@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export const useStyles = makeStyles(({ spacing }) => ({
+export const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -13,6 +13,5 @@ export const useStyles = makeStyles(({ spacing }) => ({
     alignItems: 'center',
     fontSize: 20,
     fontWeight: 500,
-    marginBottom: spacing(2),
   },
 }));

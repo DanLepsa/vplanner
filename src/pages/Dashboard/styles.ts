@@ -13,4 +13,8 @@ export const useStyles = makeStyles((theme) => ({
   gridContainer: {
     marginBottom: theme.spacing(2),
   },
+  searchButton: {
+    justifyContent: 'flex-start',
+    display: 'flex',
+  },
 }));
