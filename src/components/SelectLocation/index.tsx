@@ -9,10 +9,11 @@ import { useStyles } from './styles';
 
 interface SelectLocationProps {
   label?: string;
+  isDisabled?: boolean;
   onSelectLocation: (location: City) => void;
 }
 
-export const SelectLocation = ({ label, onSelectLocation }: SelectLocationProps) => {
+export const SelectLocation = ({ label, isDisabled, onSelectLocation }: SelectLocationProps) => {
   const classes = useStyles();
 
   const handleOnChange = (event: React.ChangeEvent<any>, value: City | null) => {
@@ -27,6 +28,7 @@ export const SelectLocation = ({ label, onSelectLocation }: SelectLocationProps)
         {label || 'Select Destination'}
       </InputLabel>
       <Autocomplete
+        disabled={isDisabled}
         options={cities}
         getOptionLabel={(option) => option.name}
         style={{ width: 300 }}

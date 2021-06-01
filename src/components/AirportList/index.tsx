@@ -8,12 +8,13 @@ import { useStyles } from './styles';
 
 interface AirportListProps {
   loading?: boolean;
+  isDisabled?: boolean;
   onSelectAirport: (airport: Airport | null) => void;
   airports: Airport[];
   errorMessage?: string;
 }
 
-export const AirportList = ({ loading, airports, onSelectAirport, errorMessage }: AirportListProps) => {
+export const AirportList = ({ loading, isDisabled, airports, onSelectAirport, errorMessage }: AirportListProps) => {
   const classes = useStyles();
   const [selectedAirport, setSelectedAirport] = React.useState<string | null>(null);
 
@@ -37,6 +38,7 @@ export const AirportList = ({ loading, airports, onSelectAirport, errorMessage }
         <ListItemText id="switch-list-label-wifi" primary={`${airport.name}, ${airport.countryName}`} />
         <ListItemSecondaryAction>
           <Switch
+            disabled={isDisabled}
             edge="end"
             color="primary"
             onChange={handleToggle(airport.id)}

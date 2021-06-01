@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
 
-import { Airport } from 'types';
+import { Airport, API_Quote, API_Carrier } from 'types';
 
 import { Action } from './actions';
 
@@ -11,7 +11,8 @@ export interface AppState {
   pendingAirportsOrigin: boolean;
   pending?: boolean;
   error?: boolean;
-  availableFlights: any[];
+  availableQuotes: API_Quote[];
+  availableCarriers: API_Carrier[];
 }
 
 interface AppContextInterface {

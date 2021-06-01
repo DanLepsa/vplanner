@@ -1,4 +1,10 @@
 import { CurrencySeparator } from './Currencies';
+
+export enum DateFormats {
+  STANDARD = 'yyyy-MM-dd',
+  DAY_MONTH_YEAR = 'dd MM yyyy',
+}
+
 export type API_OutboundDate = {
   PartialDate: string;
   Price: number;
@@ -16,7 +22,7 @@ export type API_OutboundLeg = {
   OriginId: number;
   CarrierIds: number[];
   DestinationId: number;
-  DepartureDate: Date;
+  DepartureDate: string;
 };
 
 export type API_InboundLeg = API_OutboundLeg;
@@ -26,8 +32,8 @@ export type API_Quote = {
   MinPrice: number;
   Direct: boolean;
   OutboundLeg: API_OutboundLeg;
-  InboundLeg: API_InboundLeg;
-  QuoteDateTime: Date;
+  InboundLeg?: API_InboundLeg;
+  QuoteDateTime: string;
 };
 
 export type API_Place = {

@@ -47,7 +47,10 @@ export const getBrowseDatesAction = (dispatch: Dispatch<Action>) => async (data:
 
   try {
     const result = await getBrowseDatesFromApi(data);
-    dispatch({ type: ActionTypes.GET_BROWSE_DATES_SUCCESS, payload: result });
+    dispatch({
+      type: ActionTypes.GET_BROWSE_DATES_SUCCESS,
+      payload: { quotes: result.Quotes, carriers: result.Carriers },
+    });
   } catch {
     dispatch({ type: ActionTypes.GET_BROWSE_DATES_ERROR });
   }

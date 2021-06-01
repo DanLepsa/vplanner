@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, Grid, Paper } from '@material-ui/core';
 import { format } from 'date-fns';
 
-import { SelectLocation, SelectCurrency, AirportList, SelectDate } from 'components';
-import { Airport, City, BrowseDateRequestObject, currencies } from 'types';
+import { SelectLocation, SelectCurrency, AirportList, SelectDate, FlightList } from 'components';
+import { Airport, City, BrowseDateRequestObject, currencies, DateFormats } from 'types';
 
 import { useData } from './useData';
 
@@ -32,7 +32,10 @@ export const Dashboard = () => {
   const {
     pendingAirports,
     pendingAirportsOrigin,
+    availableCarriers,
+    availableQuotes,
     error,
+    pending,
     airports,
     airportsOrigin,
     getAirportsByReturnLocation,
@@ -60,12 +63,16 @@ export const Dashboard = () => {
     returnAirport: '',
   });
 
-  const handleSelectLocation = (location: City) => {
-    setState((prev) => ({ ...prev, returnLocation: location }));
+  const handleSelectReturnLocation = (location: City) => {
+    if (location !== state.returnLocation) {
+      setState((prev) => ({ ...prev, returnLocation: location }));
+    }
   };
 
-  const handleSelectOriginLocation = (location: City) => {
-    setState((prev) => ({ ...prev, originLocation: location }));
+  const handleSelectOutboundLocation = (location: City) => {
+    if (location !== state.outboundLocation) {
+      setState((prev) => ({ ...prev, outboundLocation: location }));
+    }
   };
 
   const handleSelectCurrency = (currency: string) => {
@@ -89,12 +96,6 @@ export const Dashboard = () => {
   };
 
   const handleSearch = () => {
-    console.log(state.returnAirport);
-    console.log(state.outboundAirport);
-    console.log(state.outboundDate);
-    console.log(state.returnDate);
-    console.log(state.currency);
-    // Error handling
     let isInvalid = false;
 
     if (!state.outboundAirport) {
@@ -123,11 +124,12 @@ export const Dashboard = () => {
     }
 
     // construct the payload
-    const departureDate = format(state.outboundDate!, 'yyyy-mm-dd');
-    let returnDate = '';
+    const departureDate = format(state.outboundDate!, DateFormats.STANDARD);
+
+    let returnDate = 'anytime';
 
     if (state.returnDate) {
-      returnDate = format(state.returnDate, 'yyyy-mm-dd');
+      returnDate = format(state.returnDate, DateFormats.STANDARD);
     }
 
     const requestData: BrowseDateRequestObject = {
@@ -140,13 +142,17 @@ export const Dashboard = () => {
       ...(state.returnDate ? { inboundpartialdate: returnDate } : null),
     };
 
+    console.log(state.outboundDate);
     console.log('request data is ', requestData);
-    return;
 
     getBrowseDates(requestData);
     // The outbound date. Format “yyyy-mm-dd”, “yyyy-mm” or “anytime”.
     // The return date. Format “yyyy-mm-dd”, “yyyy-mm” or “anytime”. Use empty string for oneway trip.
   };
+
+  /*
+  temp comment to prevent multiple api calls
+  */
 
   useEffect(() => {
     if (state.returnLocation) {
@@ -165,21 +171,26 @@ export const Dashboard = () => {
   }, [state.outboundLocation]);
 
   return (
-    <Grid container justify="center" style={{ minHeight: '100vh' }}>
+    <Grid container justify="center" className={classes.background}>
       <Container maxWidth="lg" className={classes.root}>
         <Paper className={classes.paper}>
           <Grid container direction="column" justify="center" alignItems="center">
             <Grid container spacing={3} className={classes.gridContainer}>
               <Grid item xs={12} sm={6}>
-                <SelectLocation onSelectLocation={handleSelectOriginLocation} label={'Select Origin'} />
+                <SelectLocation
+                  onSelectLocation={handleSelectOutboundLocation}
+                  label={'Select Origin'}
+                  isDisabled={pending}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <SelectLocation onSelectLocation={handleSelectLocation} />
+                <SelectLocation onSelectLocation={handleSelectReturnLocation} isDisabled={pending} />
               </Grid>
             </Grid>
             <Grid container spacing={3} className={classes.gridContainer}>
               <Grid item xs={12} sm={6}>
                 <AirportList
+                  isDisabled={pending}
                   loading={pendingAirportsOrigin}
                   airports={airportsOrigin}
                   onSelectAirport={handleSelectOutboundAirport}
@@ -188,6 +199,7 @@ export const Dashboard = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <AirportList
+                  isDisabled={pending}
                   loading={pendingAirports}
                   airports={airports}
                   onSelectAirport={handleSelectReturnAirport}
@@ -197,7 +209,7 @@ export const Dashboard = () => {
             </Grid>
             <Grid container spacing={3} className={classes.gridContainer}>
               <Grid item xs={12}>
-                <SelectCurrency value={state.currency} onSelectCurrency={handleSelectCurrency} />
+                <SelectCurrency value={state.currency} onSelectCurrency={handleSelectCurrency} isDisabled={pending} />
               </Grid>
             </Grid>
             <Grid container spacing={3} className={classes.gridContainer}>
@@ -209,6 +221,7 @@ export const Dashboard = () => {
                   minDate={today}
                   date={state.outboundDate}
                   errorMessage={errorState.outboundDate}
+                  isDisabled={pending}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -217,14 +230,29 @@ export const Dashboard = () => {
                   onSelectDate={handleSelectReturnDate}
                   minDate={state.outboundDate}
                   date={state.returnDate}
+                  isDisabled={pending}
                 />
               </Grid>
             </Grid>
             <Grid container spacing={3} className={classes.gridContainer} alignContent="flex-end" alignItems="flex-end">
               <Grid item xs={12}>
-                <Button variant="contained" onClick={handleSearch} color="primary" className={classes.searchButton}>
+                <Button
+                  variant="contained"
+                  onClick={handleSearch}
+                  color="primary"
+                  className={classes.searchButton}
+                  disabled={pending}
+                >
                   Search
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <FlightList
+                  loading={!!pending}
+                  currency={state.currency}
+                  availableCarriers={availableCarriers}
+                  availableQuotes={availableQuotes}
+                />
               </Grid>
             </Grid>
           </Grid>

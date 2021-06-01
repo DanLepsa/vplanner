@@ -12,7 +12,16 @@ export const useData = () => {
   const classes = useStyles();
 
   const {
-    state: { pendingAirports, pendingAirportsOrigin, error, airports, airportsOrigin },
+    state: {
+      pending,
+      pendingAirports,
+      pendingAirportsOrigin,
+      error,
+      airports,
+      airportsOrigin,
+      availableQuotes,
+      availableCarriers,
+    },
     dispatch,
   } = useAppContext();
 
@@ -21,8 +30,11 @@ export const useData = () => {
   const getBrowseDates = (data: BrowseDateRequestObject) => getBrowseDatesAction(dispatch)(data);
 
   return {
+    pending,
     pendingAirports,
     pendingAirportsOrigin,
+    availableQuotes,
+    availableCarriers,
     error,
     airports,
     airportsOrigin,

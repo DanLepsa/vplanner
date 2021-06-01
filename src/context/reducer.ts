@@ -3,40 +3,49 @@ import { ActionTypes, Action } from './actions';
 
 export const initialState: AppState = {
   airports: [
-    // { id: '1', name: 'aaa', countryId: 'a', regionId: 'a', cityId: 'a', countryName: 'a' },
-    // { id: '2', name: 'bbbb', countryId: 'b', regionId: 'b', cityId: 'b', countryName: 'b' },
+    // {
+    //   id: 'LCA-sky',
+    //   name: 'Larnaca',
+    //   countryId: 'CY-sky',
+    //   regionId: '',
+    //   cityId: 'LARN-sky',
+    //   countryName: 'Cyprus',
+    // },
   ],
   airportsOrigin: [
     // {
-    //   id: 'COR-sky',
-    //   name: 'Cordoba',
-    //   countryId: 'AR-sky',
+    //   id: 'CLJ-sky',
+    //   name: 'Cluj-Napoca',
+    //   countryId: 'RO-sky',
     //   regionId: '',
-    //   cityId: 'CORA-sky',
-    //   countryName: 'Argentina',
-    // },
-    // {
-    //   id: 'MTR-sky',
-    //   name: 'Monteria',
-    //   countryId: 'CO-sky',
-    //   regionId: '',
-    //   cityId: 'MTRA-sky',
-    //   countryName: 'Colombia',
-    // },
-    // {
-    //   id: 'RCU-sky',
-    //   name: 'Rio Cuarto',
-    //   countryId: 'AR-sky',
-    //   regionId: '',
-    //   cityId: 'RCUA-sky',
-    //   countryName: 'Argentina',
+    //   cityId: 'CLUJ-sky',
+    //   countryName: 'Romania',
     // },
   ],
   pendingAirports: false,
   pendingAirportsOrigin: false,
   pending: false,
   error: false,
-  availableFlights: [],
+  availableQuotes: [
+    // {
+    //   QuoteId: 1,
+    //   MinPrice: 197,
+    //   Direct: true,
+    //   OutboundLeg: {
+    //     CarrierIds: [18],
+    //     OriginId: 45146,
+    //     DestinationId: 65441,
+    //     DepartureDate: '2021-06-06T00:00:00',
+    //   },
+    //   QuoteDateTime: '2021-05-31T11:23:00',
+    // },
+  ],
+  availableCarriers: [
+    // {
+    //   CarrierId: 18,
+    //   Name: 'Blue Air',
+    // },
+  ],
 };
 
 export const reducer = (state: AppState, action: Action) => {
@@ -88,15 +97,15 @@ export const reducer = (state: AppState, action: Action) => {
     case ActionTypes.GET_BROWSE_DATES_PENDING: {
       return {
         ...state,
-        availableFlights: action.payload,
-        pending: false,
-        error: false,
+        pending: true,
       };
     }
     case ActionTypes.GET_BROWSE_DATES_SUCCESS: {
       return {
         ...state,
-        pending: true,
+        availableQuotes: action.payload.quotes,
+        availableCarriers: action.payload.carriers,
+        pending: false,
         error: false,
       };
     }

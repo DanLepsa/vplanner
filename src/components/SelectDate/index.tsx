@@ -13,9 +13,18 @@ interface SelectDateProps extends Partial<DatePickerProps> {
   date: Date | null;
   onSelectDate: (date: Date | null) => void;
   errorMessage?: string;
+  isDisabled?: boolean;
 }
 
-export const SelectDate = ({ label, date, isRequired, onSelectDate, errorMessage, minDate }: SelectDateProps) => {
+export const SelectDate = ({
+  label,
+  date,
+  isRequired,
+  onSelectDate,
+  isDisabled,
+  errorMessage,
+  minDate,
+}: SelectDateProps) => {
   const classes = useStyles();
 
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(date ? date : null);
@@ -33,6 +42,7 @@ export const SelectDate = ({ label, date, isRequired, onSelectDate, errorMessage
       </InputLabel>
       <Grid container>
         <KeyboardDatePicker
+          disabled={isDisabled}
           inputVariant="outlined"
           disableToolbar
           variant="inline"
