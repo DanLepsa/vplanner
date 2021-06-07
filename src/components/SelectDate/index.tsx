@@ -1,9 +1,9 @@
 import 'date-fns';
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker, DatePickerProps } from '@material-ui/pickers';
-import { InputLabel } from '@material-ui/core';
+import { FormControlLabel, InputLabel, Switch, useTheme } from '@material-ui/core';
 
 import { useStyles } from './styles';
 
@@ -14,6 +14,7 @@ interface SelectDateProps extends Partial<DatePickerProps> {
   onSelectDate: (date: Date | null) => void;
   errorMessage?: string;
   isDisabled?: boolean;
+  onSwitchChange?: (checked: boolean) => void;
 }
 
 export const SelectDate = ({
@@ -24,15 +25,24 @@ export const SelectDate = ({
   isDisabled,
   errorMessage,
   minDate,
+  onSwitchChange,
 }: SelectDateProps) => {
   const classes = useStyles();
+  const { spacing } = useTheme();
 
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(date ? date : null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(date ? date : null);
+  const [isAnytime, setIsAnytime] = useState<boolean>(false);
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
 
     onSelectDate(date);
+  };
+
+  const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setIsAnytime(checked);
+
+    onSwitchChange && onSwitchChange(checked);
   };
 
   return (
@@ -55,6 +65,13 @@ export const SelectDate = ({
           }}
           minDate={minDate || undefined}
           minDateMessage={'Return date must be after the outbound date!'}
+        />
+        <FormControlLabel
+          value="end"
+          control={<Switch color="primary" checked={isAnytime} onChange={handleChangeSwitch} />}
+          label="Anytime"
+          labelPlacement="end"
+          style={{ marginLeft: spacing(0.5) }}
         />
       </Grid>
     </MuiPickersUtilsProvider>

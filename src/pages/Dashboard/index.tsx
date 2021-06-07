@@ -15,6 +15,8 @@ interface DashboardState {
   returnDate: Date | null;
   outboundAirport: Airport | null;
   returnAirport: Airport | null;
+  isAnytimeOutboundDate: boolean;
+  isAnytimeReturnDate: boolean;
 }
 
 interface DashboardErrorState {
@@ -52,6 +54,8 @@ export const Dashboard = () => {
     returnDate: null,
     outboundAirport: null,
     returnAirport: null,
+    isAnytimeOutboundDate: false,
+    isAnytimeReturnDate: false,
   });
 
   const [errorState, setErrorState] = useState<DashboardErrorState>({
@@ -95,6 +99,14 @@ export const Dashboard = () => {
     setState((prev) => ({ ...prev, returnAirport: airport }));
   };
 
+  const handleOutboundSwitchChange = (checked: boolean) => {
+    setState({ ...state, isAnytimeOutboundDate: checked });
+  };
+
+  const handleReturnSwitchChange = (checked: boolean) => {
+    setState({ ...state, isAnytimeReturnDate: checked });
+  };
+
   const handleSearch = () => {
     let isInvalid = false;
 
@@ -112,7 +124,7 @@ export const Dashboard = () => {
       setErrorState((prev) => ({ ...prev, returnAirport: '' }));
     }
 
-    if (!state.outboundDate) {
+    if (!state.outboundDate && !state.isAnytimeOutboundDate) {
       setErrorState((prev) => ({ ...prev, outboundDate: 'A date must be selected' }));
       isInvalid = true;
     } else {
@@ -124,35 +136,28 @@ export const Dashboard = () => {
     }
 
     // construct the payload
-    const departureDate = format(state.outboundDate!, DateFormats.STANDARD);
-
-    let returnDate = 'anytime';
-
-    if (state.returnDate) {
-      returnDate = format(state.returnDate, DateFormats.STANDARD);
-    }
+    const departureDate = state.isAnytimeOutboundDate ? 'anytime' : format(state.outboundDate!, DateFormats.STANDARD);
+    const returnDate = state.isAnytimeReturnDate
+      ? 'anytime'
+      : state.returnDate
+      ? format(state.returnDate, DateFormats.STANDARD)
+      : '';
 
     const requestData: BrowseDateRequestObject = {
       locale: 'en-US',
       country: 'RO',
       currency: state.currency, // 'USD',
       originplace: state.outboundAirport!.id, // 'SFO-sky',
-      outboundpartialdate: departureDate, // '2021-07-01',
+      outboundpartialdate: departureDate, // '2021-07-01' or "anytime",
       destinationplace: state.returnAirport!.id, // 'LAX-sky',
-      ...(state.returnDate ? { inboundpartialdate: returnDate } : null),
+      ...(state.returnDate && { inboundpartialdate: returnDate }),
     };
 
     console.log(state.outboundDate);
     console.log('request data is ', requestData);
 
     getBrowseDates(requestData);
-    // The outbound date. Format “yyyy-mm-dd”, “yyyy-mm” or “anytime”.
-    // The return date. Format “yyyy-mm-dd”, “yyyy-mm” or “anytime”. Use empty string for oneway trip.
   };
-
-  /*
-  temp comment to prevent multiple api calls
-  */
 
   useEffect(() => {
     if (state.returnLocation) {
@@ -222,6 +227,7 @@ export const Dashboard = () => {
                   date={state.outboundDate}
                   errorMessage={errorState.outboundDate}
                   isDisabled={pending}
+                  onSwitchChange={handleOutboundSwitchChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -231,6 +237,7 @@ export const Dashboard = () => {
                   minDate={state.outboundDate}
                   date={state.returnDate}
                   isDisabled={pending}
+                  onSwitchChange={handleReturnSwitchChange}
                 />
               </Grid>
             </Grid>
