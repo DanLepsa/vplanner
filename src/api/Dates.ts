@@ -25,8 +25,6 @@ export const getBrowseDatesFromApi = async (data: BrowseDateRequestObject): Prom
 
     const result = (await response.data) as API_BrowseDates;
 
-    console.log('result is ', result);
-
     return result;
   } catch (error) {
     throw new Error(error);

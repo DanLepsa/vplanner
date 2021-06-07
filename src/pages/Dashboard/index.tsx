@@ -153,9 +153,6 @@ export const Dashboard = () => {
       ...(state.returnDate && { inboundpartialdate: returnDate }),
     };
 
-    console.log(state.outboundDate);
-    console.log('request data is ', requestData);
-
     getBrowseDates(requestData);
   };
 
