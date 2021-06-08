@@ -135,8 +135,8 @@ export const Dashboard = () => {
       return;
     }
 
-    // construct the payload
     const departureDate = state.isAnytimeOutboundDate ? 'anytime' : format(state.outboundDate!, DateFormats.STANDARD);
+
     const returnDate = state.isAnytimeReturnDate
       ? 'anytime'
       : state.returnDate
@@ -146,11 +146,11 @@ export const Dashboard = () => {
     const requestData: BrowseDateRequestObject = {
       locale: 'en-US',
       country: 'RO',
-      currency: state.currency, // 'USD',
-      originplace: state.outboundAirport!.id, // 'SFO-sky',
-      outboundpartialdate: departureDate, // '2021-07-01' or "anytime",
-      destinationplace: state.returnAirport!.id, // 'LAX-sky',
-      ...(state.returnDate && { inboundpartialdate: returnDate }),
+      currency: state.currency,
+      originplace: state.outboundAirport!.id,
+      outboundpartialdate: departureDate,
+      destinationplace: state.returnAirport!.id,
+      ...(returnDate && { inboundpartialdate: returnDate }),
     };
 
     getBrowseDates(requestData);
@@ -252,6 +252,7 @@ export const Dashboard = () => {
               </Grid>
               <Grid item xs={12}>
                 <FlightList
+                  error={!!error}
                   loading={!!pending}
                   currency={state.currency}
                   availableCarriers={availableCarriers}

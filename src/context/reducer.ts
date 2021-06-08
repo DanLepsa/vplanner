@@ -2,50 +2,14 @@ import { AppState } from './state';
 import { ActionTypes, Action } from './actions';
 
 export const initialState: AppState = {
-  airports: [
-    // {
-    //   id: 'LCA-sky',
-    //   name: 'Larnaca',
-    //   countryId: 'CY-sky',
-    //   regionId: '',
-    //   cityId: 'LARN-sky',
-    //   countryName: 'Cyprus',
-    // },
-  ],
-  airportsOrigin: [
-    // {
-    //   id: 'CLJ-sky',
-    //   name: 'Cluj-Napoca',
-    //   countryId: 'RO-sky',
-    //   regionId: '',
-    //   cityId: 'CLUJ-sky',
-    //   countryName: 'Romania',
-    // },
-  ],
+  airports: [],
+  airportsOrigin: [],
   pendingAirports: false,
   pendingAirportsOrigin: false,
   pending: false,
   error: false,
-  availableQuotes: [
-    // {
-    //   QuoteId: 1,
-    //   MinPrice: 197,
-    //   Direct: true,
-    //   OutboundLeg: {
-    //     CarrierIds: [18],
-    //     OriginId: 45146,
-    //     DestinationId: 65441,
-    //     DepartureDate: '2021-06-06T00:00:00',
-    //   },
-    //   QuoteDateTime: '2021-05-31T11:23:00',
-    // },
-  ],
-  availableCarriers: [
-    // {
-    //   CarrierId: 18,
-    //   Name: 'Blue Air',
-    // },
-  ],
+  availableQuotes: [],
+  availableCarriers: [],
 };
 
 export const reducer = (state: AppState, action: Action) => {
@@ -98,6 +62,8 @@ export const reducer = (state: AppState, action: Action) => {
       return {
         ...state,
         pending: true,
+        availableQuotes: [],
+        availableCarriers: [],
       };
     }
     case ActionTypes.GET_BROWSE_DATES_SUCCESS: {

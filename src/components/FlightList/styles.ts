@@ -9,4 +9,9 @@ export const useStyles = makeStyles(({ spacing }) => ({
     marginTop: spacing(2),
     borderRadius: spacing(),
   },
+  error: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 }));
