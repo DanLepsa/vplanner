@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Typography,
-  ListItem,
-  List,
-  ListItemText,
-  ListItemSecondaryAction,
-  Switch,
-  InputLabel,
-} from '@material-ui/core';
+import { ListItem, List, ListItemText, ListItemSecondaryAction, Switch, InputLabel } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 
 import { Airport } from 'types';
@@ -16,11 +8,13 @@ import { useStyles } from './styles';
 
 interface AirportListProps {
   loading?: boolean;
+  isDisabled?: boolean;
   onSelectAirport: (airport: Airport | null) => void;
   airports: Airport[];
+  errorMessage?: string;
 }
 
-export const AirportList = ({ loading, airports, onSelectAirport }: AirportListProps) => {
+export const AirportList = ({ loading, isDisabled, airports, onSelectAirport, errorMessage }: AirportListProps) => {
   const classes = useStyles();
   const [selectedAirport, setSelectedAirport] = React.useState<string | null>(null);
 
@@ -41,11 +35,10 @@ export const AirportList = ({ loading, airports, onSelectAirport }: AirportListP
   const renderItems = () => {
     return airports.map((airport) => (
       <ListItem key={airport.id} value={airport.cityId}>
-        <ListItemText id="switch-list-label-wifi" primary={airport.name}>
-          {airport.name}
-        </ListItemText>
+        <ListItemText id="switch-list-label-wifi" primary={`${airport.name}, ${airport.countryName}`} />
         <ListItemSecondaryAction>
           <Switch
+            disabled={isDisabled}
             edge="end"
             color="primary"
             onChange={handleToggle(airport.id)}
@@ -59,10 +52,8 @@ export const AirportList = ({ loading, airports, onSelectAirport }: AirportListP
 
   return (
     <>
-      <InputLabel required={true} className={classes.inputLabel}>
-        <Typography variant="h6" component={'span'} color="textPrimary">
-          Select Airport
-        </Typography>
+      <InputLabel required={true} className={classes.inputLabel} error={!!errorMessage?.length}>
+        Select Airport
       </InputLabel>
       {loading ? (
         <div className={classes.root}>

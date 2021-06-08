@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputLabel, TextField, Typography } from '@material-ui/core';
+import { InputLabel, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 import { cities, City } from 'types';
@@ -8,10 +8,12 @@ import { ListboxComponent } from './VirtualizationHelpers';
 import { useStyles } from './styles';
 
 interface SelectLocationProps {
+  label?: string;
+  isDisabled?: boolean;
   onSelectLocation: (location: City) => void;
 }
 
-export const SelectLocation = ({ onSelectLocation }: SelectLocationProps) => {
+export const SelectLocation = ({ label, isDisabled, onSelectLocation }: SelectLocationProps) => {
   const classes = useStyles();
 
   const handleOnChange = (event: React.ChangeEvent<any>, value: City | null) => {
@@ -23,12 +25,10 @@ export const SelectLocation = ({ onSelectLocation }: SelectLocationProps) => {
   return (
     <div>
       <InputLabel required={true} className={classes.inputLabel}>
-        <Typography variant="h6" component={'span'} color="textPrimary">
-          Select Destination
-        </Typography>
+        {label || 'Select Destination'}
       </InputLabel>
       <Autocomplete
-        id="select-location-autocomplete"
+        disabled={isDisabled}
         options={cities}
         getOptionLabel={(option) => option.name}
         style={{ width: 300 }}
