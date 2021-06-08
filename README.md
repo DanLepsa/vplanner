@@ -6,7 +6,8 @@
 2. Create a .env file and paste the key from your account, like this: REACT_APP_RAPIDAPI_KEY=key
 3. ✈
 
+
 # Starting the app
 
-npm i
-npm start
+1.npm i
+2. npm start
